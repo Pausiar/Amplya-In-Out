@@ -13,6 +13,12 @@ function formatDate(isoDate) {
   }).format(date);
 }
 
+function formatSize(bytes) {
+  if (bytes >= 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+  if (bytes >= 1024) return (bytes / 1024).toFixed(1) + " KB";
+  return bytes + " B";
+}
+
 function renderMessage(message) {
   apkList.innerHTML = "";
   const row = document.createElement("div");
@@ -37,8 +43,15 @@ function createApkRow(apk) {
   uploadDate.className = "apk-date";
   uploadDate.textContent = `Subida: ${formatDate(apk.uploadedAt)}`;
 
+  const sizeEl = document.createElement("p");
+  sizeEl.className = "apk-size" + (apk.size < 1024 ? " apk-size--warn" : "");
+  sizeEl.textContent = apk.size < 1024
+    ? `⚠️ Tamaño: ${formatSize(apk.size)} — archivo posiblemente incompleto`
+    : `Tamaño: ${formatSize(apk.size)}`;
+
   nameCell.appendChild(fileName);
   nameCell.appendChild(uploadDate);
+  nameCell.appendChild(sizeEl);
 
   const actionCell = document.createElement("div");
   actionCell.className = "apk-action";
@@ -123,7 +136,8 @@ async function loadApks() {
         return {
           name: file.name,
           uploadedAt: uploadedAt || "1970-01-01T00:00:00.000Z",
-          downloadUrl: file.download_url
+          downloadUrl: file.download_url,
+          size: file.size
         };
       })
     );
