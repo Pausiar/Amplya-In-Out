@@ -147,6 +147,17 @@ body {
   color: rgba(26, 28, 28, 0.66);
 }
 
+.apk-size {
+  margin: 2px 0 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(26, 28, 28, 0.5);
+}
+
+.apk-size--warn {
+  color: #b84000;
+}
+
 .apk-action {
   display: flex;
   justify-content: flex-end;
