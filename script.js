@@ -45,9 +45,30 @@ function createApkRow(apk) {
 
   const downloadLink = document.createElement("a");
   downloadLink.className = "download-btn";
-  downloadLink.href = apk.downloadUrl;
-  downloadLink.download = apk.name;
   downloadLink.textContent = "Descargar";
+  downloadLink.addEventListener("click", async (e) => {
+    e.preventDefault();
+    downloadLink.textContent = "Descargando...";
+    downloadLink.classList.add("download-btn--loading");
+    try {
+      const response = await fetch(apk.downloadUrl);
+      if (!response.ok) throw new Error("Error al descargar el archivo.");
+      const blob = await response.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      const tempLink = document.createElement("a");
+      tempLink.href = objectUrl;
+      tempLink.download = apk.name;
+      document.body.appendChild(tempLink);
+      tempLink.click();
+      document.body.removeChild(tempLink);
+      URL.revokeObjectURL(objectUrl);
+    } catch {
+      alert("No se pudo descargar el APK. Inténtalo de nuevo.");
+    } finally {
+      downloadLink.textContent = "Descargar";
+      downloadLink.classList.remove("download-btn--loading");
+    }
+  });
 
   actionCell.appendChild(downloadLink);
 
