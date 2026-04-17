@@ -187,6 +187,12 @@ body {
   outline-offset: 4px;
 }
 
+.download-btn--loading {
+  opacity: 0.6;
+  pointer-events: none;
+  cursor: default;
+}
+
 .brand-footer {
   position: relative;
   z-index: 2;
